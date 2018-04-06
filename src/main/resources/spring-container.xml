@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.1.xsd">
+
+    <context:property-placeholder location="classpath*:*.properties"/>
+
+
+    <bean id="httpRequestToRestAdapter" class="org.collectorOfCompetitorsPrices.restTheWrenchMonkeyAdapter.impl.HttpRequestToRestAdapterImpl">
+        <constructor-arg value="${api.url.authorize.user}"/>
+        <constructor-arg value="${api.url.authorize.password}"/>
+        <constructor-arg value="${api.url.domain}"/>
+        <constructor-arg value="${api.url.Competitor}"/>
+        <constructor-arg value="${api.url.api.CompetitorPriceCheckUpdateAll}"/>
+        <constructor-arg value="${api.url.ManufacturerPartNumber.findBrands}"/>
+        <constructor-arg value="${api.url.ManufacturerPartNumber.findItemNumberByBrands}"/>
+        <constructor-arg value="${api.optimalSizeForAsyncRequest}"/>
+    </bean>
+
+    <bean id="dispatcher" class="org.collectorOfCompetitorsPrices.dispatcher.impl.DispatcherImpl" init-method="initListCompetitorFromRest">
+        <property name="httpRequestToRestAdapter" ref="httpRequestToRestAdapter"/>
+        <property name="repoSiteProcessors" ref="repoSiteProcessors"/>
+    </bean>
+
+    <bean id="repoSiteProcessors" class="org.collectorOfCompetitorsPrices.siteProcessorRepo.impl.RepoSiteProcessorImpl">
+        <property name="siteProcessors">
+            <list>
+                <bean id="canadaAutoSupplyProcessor" class="org.collectorOfCompetitorsPrices.siteProcessorRepo.siteProcessors.impl.CanadaAutoSupplyProcessor">
+                    <property name="competitorId" value="${canadaAutoSupplyProcessor.competitorId}"/>
+                    <property name="siteAddress" value="${canadaAutoSupplyProcessor.siteAddress}"/>
+                    <property name="patternToBrand" value="${canadaAutoSupplyProcessor.patternToBrand}"/>
+                    <property name="pagePatternToBrands" value="${canadaAutoSupplyProcessor.pagePatternToBrands}"/>
+                    <property name="sleepTime" value="${canadaAutoSupplyProcessor.sleepTime}"/>
+                    <property name="timeout" value="${canadaAutoSupplyProcessor.timeout}"/>
+                    <property name="parallelFixedThreadPoolForParseItem" value="${canadaAutoSupplyProcessor.parallelFixedThreadPoolForParseItem}"/>
+                    <property name="incompleteMatchingBrand" value="${canadaAutoSupplyProcessor.incompleteMatchingBrand}"/>
+                    <property name="proxyList" value="${proxy.list}"/>
+                </bean>
+                <bean id="buyAutoPartsOnlineProcessor" class="org.collectorOfCompetitorsPrices.siteProcessorRepo.siteProcessors.impl.BuyAutoPartsOnlineProcessor">
+                    <property name="competitorId" value="${buyAutoPartsOnlineProcessor.competitorId}"/>
+                    <property name="siteAddress" value="${buyAutoPartsOnlineProcessor.siteAddress}"/>
+                    <property name="patternToBrand" value="${buyAutoPartsOnlineProcessor.patternToBrand}"/>
+                    <property name="pagePatternToItem" value="${buyAutoPartsOnlineProcessor.pagePatternToItem}"/>
+                    <property name="sleepTime" value="${buyAutoPartsOnlineProcessor.sleepTime}"/>
+                    <property name="timeout" value="${buyAutoPartsOnlineProcessor.timeout}"/>
+                    <property name="parallelFixedThreadPoolForParseItem" value="${buyAutoPartsOnlineProcessor.parallelFixedThreadPoolForParseItem}"/>
+                    <property name="incompleteMatchingBrand" value="${buyAutoPartsOnlineProcessor.incompleteMatchingBrand}"/>
+                    <property name="proxyList" value="${proxy.list}"/>
+                </bean>
+                <bean id="partsavatarProcessor" class="org.collectorOfCompetitorsPrices.siteProcessorRepo.siteProcessors.impl.PartsAvatarProcessor">
+                    <property name="competitorId" value="${partsAvatar.competitorId}"/>
+                    <property name="siteAddress" value="${partsAvatar.siteAddress}"/>
+                    <property name="patternToBrand" value="${partsAvatar.patternToBrand}"/>
+                    <property name="pagePatternToBrandsFirstPart" value="${partsAvatar.pagePatternToBrandsFirstPart}"/>
+                    <property name="pagePatternToBrandsSecondPart" value="${partsAvatar.pagePatternToBrandsSecondPart}"/>
+                    <property name="pagePatternToBrandsThirdPart" value="${partsAvatar.pagePatternToBrandsThirdPart}"/>
+                    <property name="pagePatternToBrandsPricePart" value="${partsAvatar.pagePatternToBrandsPricePart}"/>
+                    <property name="sleepTime" value="${partsAvatar.sleepTime}"/>
+                    <property name="timeout" value="${partsAvatar.timeout}"/>
+                    <property name="incompleteMatchingBrand" value="${partsAvatar.incompleteMatchingBrand}"/>
+                    <property name="proxyList" value="${proxy.list}"/>
+                </bean>
+                <bean id="globalIndustrialProcessor" class="org.collectorOfCompetitorsPrices.siteProcessorRepo.siteProcessors.impl.GlobalIndustrialProcessor">
+                    <property name="competitorId" value="${globalIndustrial.competitorId}"/>
+                    <property name="siteAddress" value="${globalIndustrial.siteAddress}"/>
+                    <property name="patternToBrand" value="${globalIndustrial.patternToBrand}"/>
+                    <property name="sleepTime" value="${globalIndustrial.sleepTime}"/>
+                    <property name="timeout" value="${globalIndustrial.timeout}"/>
+                    <property name="pagePatten" value="${globalIndustrial.pagePatten}"/>
+                    <property name="itemOnPagePattern" value="${globalIndustrial.itemOnPagePattern}"/>
+                    <property name="brandSelectorForNumber" value="${globalIndustrial.brandSelectorForNumber}"/>
+                    <property name="parallelFixedThreadPoolForParseItem" value="${globalIndustrial.parallelFixedThreadPoolForParseItem}"/>
+                    <property name="incompleteMatchingBrand" value="${globalIndustrial.incompleteMatchingBrand}"/>
+                    <property name="proxyList" value="${proxy.list}"/>
+                </bean>
+                <bean id="autoPartsWayProcessor" class="org.collectorOfCompetitorsPrices.siteProcessorRepo.siteProcessors.impl.AutoPartsWayProcessor">
+                    <property name="competitorId" value="${autoPartsWay.competitorId}"/>
+                    <property name="siteAddress" value="${autoPartsWay.siteAddress}"/>
+                    <property name="patternToPageBrand" value="${autoPartsWay.patternToPageBrand}" />
+                    <property name="sleepTime" value="${autoPartsWay.sleepTime}"/>
+                    <property name="timeout" value="${autoPartsWay.timeout}"/>
+                    <property name="parallelFixedThreadPoolForParseItem" value="${autoPartsWay.parallelFixedThreadPoolForParseItem}"/>
+                    <property name="incompleteMatchingBrand" value="${autoPartsWay.incompleteMatchingBrand}"/>
+                    <property name="proxyList" value="${proxy.list}"/>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+
+</beans>
